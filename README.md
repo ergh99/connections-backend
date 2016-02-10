@@ -1,1 +1,1 @@
-# connections-backend
+# Connections backend
