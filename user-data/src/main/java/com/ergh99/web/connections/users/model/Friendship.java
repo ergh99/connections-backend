@@ -14,6 +14,10 @@ public class Friendship extends EdgeWrapper {
         super(edge);
     }
 
+    public Object getProperty(properties property) {
+        return e().property(property.name()).orElse(null);
+    }
+
     @Override
     protected Enum[] properties() {
         return properties.values();

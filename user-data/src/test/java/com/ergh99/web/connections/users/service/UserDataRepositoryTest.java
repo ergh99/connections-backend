@@ -56,7 +56,8 @@ public class UserDataRepositoryTest {
         User directCreatedUser = new User(v);
         assertThat(db.vertices())
             .hasSize(1)
-            .extracting(Vertex::label).containsExactly(User.V_CLASS);
+            .extracting(Vertex::label)
+            .containsExactly(User.V_CLASS);
         User serviceLoadedUser = userDataRepository.getUser("1");
         assertThat(serviceLoadedUser)
             .isNotNull()
@@ -69,11 +70,8 @@ public class UserDataRepositoryTest {
         Vertex v = db.addVertex(User.V_CLASS);
         User directCreatedUser = new User(v);
         directCreatedUser.setProperty(id, "1");
-        //v.property(id.name(), "1");
         User friendUser = userDataRepository.getUser("2");
         directCreatedUser.addFriend(friendUser);
-        //Vertex friendVertex = db.traversal().V().has(User.V_CLASS, id.name(), "2").next();
-        //v.addEdge(Friendship.E_CLASS, friendVertex);
         assertThat(v.edges(Direction.OUT, Friendship.E_CLASS))
             .hasSize(1)
             .extracting(Edge::inVertex)
@@ -99,7 +97,9 @@ public class UserDataRepositoryTest {
         user.setProperty(username, "foo");
         User friend = userDataRepository.getUser("2");
 
-        user.addFriend(friend);
+        Friendship friendship = user.addFriend(friend);
+        LocalDate now = LocalDate.now();
+        friendship.setProperty(Friendship.properties.createdDate, now);
 
         assertThat(user.getProperty(username))
             .isEqualTo("foo");
@@ -112,6 +112,9 @@ public class UserDataRepositoryTest {
         assertThat(user.getFriends())
             .hasSize(1)
             .containsExactly(friend);
+
+        assertThat(friendship.getProperty(Friendship.properties.createdDate))
+            .isEqualTo(now);
     }
 
     @Test
@@ -152,6 +155,33 @@ public class UserDataRepositoryTest {
     }
 
     @Test
+    public void testGetPlayWithPlayer() throws Exception {
+        LocalDate now = LocalDate.now();
+        Play play = userDataRepository.getPlay("1");
+        play.setProperty(date, now);
+
+        User user = userDataRepository.getUser("1");
+        user.setProperty(username, "foo");
+        user.recordPlay(play);
+
+        assertThat(db.vertices())
+            .hasSize(2)
+            .extracting(Vertex::label)
+            .containsOnly(Play.V_CLASS, User.V_CLASS);
+
+        assertThat(play.getProperty(Play.properties.date))
+            .isEqualTo(now);
+        assertThat(play.getDate())
+            .isEqualTo(now);
+        assertThat(play.getPlayers())
+            .hasSize(1)
+            .containsExactly(user);
+        assertThat(user.getPlays())
+            .hasSize(1)
+            .containsExactly(play);
+    }
+
+    @Test
     public void testAddPlay() throws Exception {
         User user = userDataRepository.getUser("1");
         user.setProperty(username, "foo");
@@ -163,7 +193,10 @@ public class UserDataRepositoryTest {
         playVertex.property(date.name(), playDate);
         Play play = new Play(playVertex);
 
-        user.recordPlay(play);
+        PlayRecord playRecord = user.recordPlay(play);
+        playRecord.setProperty(PlayRecord.properties.tags, "fun");
+        assertThat(playRecord.getProperty(PlayRecord.properties.tags))
+            .isEqualTo("fun");
 
         assertThat(user.getProperty(username))
             .isEqualTo("foo");
