@@ -56,11 +56,6 @@ public class User extends VertexWrapper {
 
     @Override
     protected Enum[] properties() {
-        Enum[] superProperties = super.properties();
-        Enum[] myProperties = properties.values();
-        Enum[] result = new Enum[superProperties.length + myProperties.length];
-        System.arraycopy(superProperties, 0, result, 0, superProperties.length);
-        System.arraycopy(myProperties, 0, result, superProperties.length, myProperties.length);
-        return result;
+        return ElementWrapper.joinEnums(super.properties(), properties.values());
     }
 }
