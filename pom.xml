@@ -74,20 +74,31 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>3.0.1</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Low</threshold>
+          </configuration>
+          <executions>
+            <execution>
+              <id>findbugs</id>
+              <goals>
+                <goal>findbugs</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.7.6.201602180812</version>
           <executions>
             <execution>
-              <id>jacoco-prepare-agent</id>
+              <id>jacoco</id>
               <goals>
                 <goal>prepare-agent</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>jacoco-report</id>
-              <goals>
-                <goal>report</goal>
               </goals>
             </execution>
           </executions>
@@ -100,4 +111,5 @@
       </plugins>
     </pluginManagement>
   </build>
+
 </project>
