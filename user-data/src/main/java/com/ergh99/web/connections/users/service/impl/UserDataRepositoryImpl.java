@@ -47,7 +47,7 @@ public class UserDataRepositoryImpl implements UserDataRepository {
         Vertex result =
             source.V().has(vertexClass, VertexWrapper.properties.id.name(), id).tryNext()
                 .orElseGet(() -> {
-                    Vertex newUser = source.getGraph().get().addVertex(vertexClass);
+                    Vertex newUser = graphFactory.getGraph().addVertex(vertexClass);
                     newUser.property(VertexWrapper.properties.id.name(), id);
                     return newUser;
                 });

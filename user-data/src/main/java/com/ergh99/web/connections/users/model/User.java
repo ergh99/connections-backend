@@ -29,25 +29,29 @@ public class User extends VertexWrapper {
     }
 
     public List<User> getFriends() {
+        log.entry();
         List<User> result = new ArrayList<>();
         v().vertices(Direction.OUT, Friendship.E_CLASS).forEachRemaining(v -> result.add(new User(v)));
-        return result;
+        return log.exit(result);
     }
 
     public List<Play> getPlays() {
+        log.entry();
         List<Play> result = new ArrayList<>();
         v().vertices(Direction.OUT, PlayRecord.E_CLASS).forEachRemaining(v -> result.add(new Play(v)));
-        return result;
+        return log.exit(result);
     }
 
     public Friendship addFriend(User friend) {
+        log.entry(friend);
         Edge edge = v().addEdge(Friendship.E_CLASS, friend.v());
-        return new Friendship(edge);
+        return log.exit(new Friendship(edge));
     }
 
     public PlayRecord recordPlay(Play play) {
+        log.entry(play);
         Edge edge = v().addEdge(PlayRecord.E_CLASS, play.v());
-        return new PlayRecord(edge);
+        return log.exit(new PlayRecord(edge));
     }
 
     public enum properties {
