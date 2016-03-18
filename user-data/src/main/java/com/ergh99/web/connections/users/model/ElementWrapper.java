@@ -53,6 +53,11 @@ public abstract class ElementWrapper {
         );
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.stream(properties()).map(this::getProperty).toArray());
+    }
+
     protected static Enum[] joinEnums(Enum[] a, Enum[] b) {
         Enum[] result = new Enum[a.length + b.length];
         System.arraycopy(a, 0, result, 0, a.length);

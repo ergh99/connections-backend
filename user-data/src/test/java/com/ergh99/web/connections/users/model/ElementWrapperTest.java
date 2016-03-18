@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.*;
  */
 public class ElementWrapperTest {
 
-    public static final String DB_URL = "MEMORY:ELEMENT-WRAPPER-TEST";
+    private static final String DB_URL = "MEMORY:ELEMENT-WRAPPER-TEST";
 
     private OrientGraphFactory graphFactory = new OrientGraphFactory(DB_URL);
     private Graph graph;
@@ -63,5 +63,21 @@ public class ElementWrapperTest {
         assertThat(wrapper1.equals(new Object())).isFalse();
 
         assertThat(wrapper1.equals(null)).isFalse();
+    }
+
+    @Test
+    public void testHashCode() {
+        ElementWrapper wrapper1 = new VertexWrapper(graph.addVertex("Sample"));
+        wrapper1.setProperty(VertexWrapper.properties.id, "1");
+
+        ElementWrapper wrapper2 = new VertexWrapper(graph.addVertex("Sample"));
+        wrapper2.setProperty(VertexWrapper.properties.id, "2");
+
+        assertThat(wrapper1.hashCode())
+            .isNotEqualTo(wrapper2.hashCode());
+
+        wrapper2.setProperty(VertexWrapper.properties.id, "1");
+        assertThat(wrapper1.hashCode())
+            .isEqualTo(wrapper2.hashCode());
     }
 }
