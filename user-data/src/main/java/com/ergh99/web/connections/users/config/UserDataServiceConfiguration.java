@@ -75,6 +75,7 @@ public class UserDataServiceConfiguration {
 //        GraphClasses.streamEdgeClasses()
 //            .map(GraphClasses::className)
 //            .forEach(graph::createEdgeClass);
+        // TODO Create annotation driven scanning
         graph.createVertexClass("V_" + User.V_CLASS);
         graph.createVertexClass("V_" + Play.V_CLASS);
         graph.createEdgeClass("E_" + Friendship.E_CLASS);
